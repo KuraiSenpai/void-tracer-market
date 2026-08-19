@@ -1,0 +1,30 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Tool & Linter caches (including Ruff!)
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+
+# Environment variables & secrets
+.env
+*.env
+
+# VS Code directory & settings
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Operating System files
+.DS_Store
+Thumbs.db
