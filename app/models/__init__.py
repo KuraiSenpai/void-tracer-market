@@ -1,3 +1,3 @@
-from .arcanes import Arcane
+from .arcane import Arcane, ArcaneStats
 
-__all__ = ["Arcane"]
+__all__ = ["Arcane", "ArcaneStats"]

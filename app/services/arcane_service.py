@@ -1,7 +1,7 @@
 import requests
 
 from app.config import settings
-from app.models import Arcane
+from app.models import Arcane, ArcaneStats
 
 HEADERS = {"Language": "en"}
 
@@ -20,7 +20,7 @@ def fetch_arcanes() -> list[Arcane]:
         arcanes = []
         for item in items:
             tags = item.get("tags", [])
-            if f"{settings.ARCANE_TAG_NAME}" in tags:
+            if settings.ARCANE_TAG_NAME in tags and settings.MOD_TAG_NAME not in tags:
                 arcanes.append(Arcane.model_validate(item))
 
         return arcanes
@@ -30,8 +30,8 @@ def fetch_arcanes() -> list[Arcane]:
         return []
 
 
-def get_arcane_medians(slug: str) -> dict:
-    url = f"{settings.statistics_endpoint(slug)}"
+def get_arcane_medians(arcane: Arcane) -> dict:
+    url = f"{settings.statistics_endpoint(arcane.slug)}"
 
     response = requests.get(url, headers=HEADERS)
 
@@ -44,9 +44,12 @@ def get_arcane_medians(slug: str) -> dict:
         valid_48h = [item for item in stats_48h if item.get("mod_rank", 0) > 0]
         valid_90d = [item for item in stats_90d if item.get("mod_rank", 0) > 0]
 
-        return {
-            "48h": valid_48h[-1]["median"] if valid_48h else None,
-            "90d": valid_90d[-1]["median"] if valid_90d else None,
-        }
+        med_48h = int(valid_48h[-1]["median"]) if valid_48h else None
+        med_90d = int(valid_90d[-1]["median"]) if valid_90d else None
 
-    return {"48h": None, "90d": None}
+        return ArcaneStats(arcane=arcane, med_48h=med_48h, med_90d=med_90d)
+    else:
+        print(
+            f"FAILED: {arcane.name} | URL: {url} | Code: {response.status_code} | Text: {response.text}"
+        )
+        return ArcaneStats(arcane=arcane, med_48h=None, med_90d=None)
