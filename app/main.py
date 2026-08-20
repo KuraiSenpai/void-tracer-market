@@ -1,6 +1,5 @@
 import time
 
-from . import settings
 from .models.arcane import ArcaneStats
 from .services import fetch_arcanes, get_arcane_medians
 from .utils import sort_arcanes_by_highest_median
