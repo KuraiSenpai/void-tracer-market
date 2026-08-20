@@ -1,5 +1,6 @@
 import time
 
+from .core.exporters import ExcelExporter
 from .models.arcane import ArcaneStats
 from .services import fetch_arcanes, get_arcane_medians
 from .utils import sort_arcanes_by_highest_median
@@ -9,9 +10,10 @@ SLEEP = 0.35
 
 def main():
     print("Fetching Arcanes...")
-
     sorted_arcanes: list[ArcaneStats] = sort_arcanes_by_highest_median(get_arcanes())
-    print_arcanes(sorted_arcanes)
+    print("Exporting to excel...")
+    file_path = ExcelExporter.export_stats(sorted_arcanes)
+    print(f"Successfully exported stats to: {file_path}")
 
 
 def get_arcanes() -> list:

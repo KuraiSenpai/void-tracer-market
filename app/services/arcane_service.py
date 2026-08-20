@@ -47,9 +47,9 @@ def get_arcane_medians(arcane: Arcane) -> dict:
         med_48h = int(valid_48h[-1]["median"]) if valid_48h else None
         med_90d = int(valid_90d[-1]["median"]) if valid_90d else None
 
-        return ArcaneStats(arcane=arcane, med_48h=med_48h, med_90d=med_90d)
+        return ArcaneStats(name=arcane.name, med_48h=med_48h, med_90d=med_90d)
     else:
         print(
             f"FAILED: {arcane.name} | URL: {url} | Code: {response.status_code} | Text: {response.text}"
         )
-        return ArcaneStats(arcane=arcane, med_48h=None, med_90d=None)
+        return ArcaneStats(name=arcane.name, med_48h=None, med_90d=None)
