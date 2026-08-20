@@ -1,25 +1,33 @@
 import time
 
+from . import settings
 from .models.arcane import ArcaneStats
 from .services import fetch_arcanes, get_arcane_medians
 from .utils import sort_arcanes_by_highest_median
 
+SLEEP = 0.35
+
 
 def main():
     print("Fetching Arcanes...")
-    arcanes = fetch_arcanes()
 
+    sorted_arcanes: list[ArcaneStats] = sort_arcanes_by_highest_median(get_arcanes())
+    print_arcanes(sorted_arcanes)
+
+
+def get_arcanes() -> list:
+    arcanes = fetch_arcanes()
     arcane_stats_list = []
 
     for arcane in arcanes:
         arcane_stats = get_arcane_medians(arcane)
         arcane_stats_list.append(arcane_stats)
-        time.sleep(0.35)
+        time.sleep(SLEEP)
 
-    sorted_arcanes: list[ArcaneStats] = sort_arcanes_by_highest_median(
-        arcane_stats_list
-    )
+    return arcane_stats_list
 
+
+def print_arcanes(sorted_arcanes: list[ArcaneStats]):
     for arcane_stats in sorted_arcanes:
         print(
             f"{arcane_stats.arcane.name}: "
